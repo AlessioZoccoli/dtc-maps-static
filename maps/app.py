@@ -6,9 +6,8 @@ import config
 
 
 if __name__ == '__main__':
-    points = Database.get_tweets() # Database.select() #.limit(1000)
+    points = Database.get_tweets()
     fmap = create_blank_map()
-    # pprint(pd.DataFrame(points)[['longitude', 'latitude', 'text', 'lang']].head())
+    fmap = add_markers_clustered(fmap, points)
 
-    fmap = add_markers_clustered(fmap, points) #pd.DataFrame(points)[['longitude', 'latitude', 'text', 'lang']])
     fmap.save(config.output_uri)
