@@ -10,3 +10,54 @@ class Database(object):
     @classmethod
     def get_n_documents(cls, n=10):
         return cls.tweets.find().limit(n)
+
+    @classmethod
+    def select(cls, field=('geo.coordinates', 'text', 'lang')):
+        return cls.tweets.find({}, {f: 1 for f in field})
+
+    @classmethod
+    def get_tweets(cls):
+        """
+        db.productMetadata.aggregate([
+                {
+                    "$match": {
+                        "productAttribute.colour": { "$exists": true, "$ne": null }
+                    }
+                },
+                {
+                    $group:{
+                        "_id": {
+                            "color": "$productAttribute.colour",
+                            "gender": "$productAttribute.gender"
+                        },
+                        "count": {
+                            $sum : 1
+                        }
+                    }
+                }
+            ]);
+        """
+        return cls.tweets.aggregate([
+            {
+                '$match': {
+                    'geo.coordinates': {'$exists': True, '$ne': None}
+                }
+            },
+            {
+                '$project': {
+                    'lang': 1,
+                    'text': 1,
+                    'longitude': {'$arrayElemAt': ['$geo.coordinates', 0]},
+                    'latitude': {'$arrayElemAt': ['$geo.coordinates', 1]}
+                }
+            }
+        ])
+
+    """
+                '$project': {
+                'lang': 1,
+                'text': 1,
+                'longitude': {'$arrayElemAt': ['$geo.coordinates', 0]},
+                'latitude': {'$arrayElemAt': ['$geo.coordinates', 1]}
+            }
+    """
