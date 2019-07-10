@@ -106,5 +106,7 @@ venv.bak/
 .mypy_cache/
 
 config.py
-
+.DS_Store
 test_map_cluster.html
+
+.idea/*

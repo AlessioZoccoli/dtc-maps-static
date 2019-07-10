@@ -18,25 +18,9 @@ class Database(object):
     @classmethod
     def get_tweets(cls):
         """
-        db.productMetadata.aggregate([
-                {
-                    "$match": {
-                        "productAttribute.colour": { "$exists": true, "$ne": null }
-                    }
-                },
-                {
-                    $group:{
-                        "_id": {
-                            "color": "$productAttribute.colour",
-                            "gender": "$productAttribute.gender"
-                        },
-                        "count": {
-                            $sum : 1
-                        }
-                    }
-                }
-            ]);
+        returns tweets from mongo with their relevant fields
         """
+
         return cls.tweets.aggregate([
             {
                 '$match': {
@@ -47,17 +31,10 @@ class Database(object):
                 '$project': {
                     'lang': 1,
                     'text': 1,
+                    'favorite_count': 1,
+                    'retweet_count': 1,
                     'longitude': {'$arrayElemAt': ['$geo.coordinates', 0]},
                     'latitude': {'$arrayElemAt': ['$geo.coordinates', 1]}
                 }
             }
         ])
-
-    """
-                '$project': {
-                'lang': 1,
-                'text': 1,
-                'longitude': {'$arrayElemAt': ['$geo.coordinates', 0]},
-                'latitude': {'$arrayElemAt': ['$geo.coordinates', 1]}
-            }
-    """
