@@ -43,3 +43,6 @@ Clickando su un indicatore vengono mostrati i seguenti dati relativi allo specif
 - utenti che hanno apprezzato il tweet
 ![latium](screenshots/latium_tweet.png)
 
+<br/><br/>
+Dettagli della mappa
+![details](screenshots/detail_vatican_tweet.png)
