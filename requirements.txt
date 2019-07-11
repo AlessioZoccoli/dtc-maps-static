@@ -1,6 +1,4 @@
 folium
 pymongo
-pandas
-matplotlib
 textblob
 translate

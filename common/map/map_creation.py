@@ -39,7 +39,7 @@ def add_markers_clustered_pretty_icons(fmap, data_points):
         return polarity
 
     marker_cluster = MarkerCluster().add_to(fmap)
-    for idx, p in enumerate(data_points):
+    for p in data_points:
         sentiment = get_sentiment(p['text'], p['lang'])
         f.Marker(
             location=(p['longitude'], p['latitude']),
@@ -47,7 +47,44 @@ def add_markers_clustered_pretty_icons(fmap, data_points):
                                                                         str(p['retweet_count']),
                                                                         str(p['favorite_count']))),
             icon=f.Icon(icon=icon_polarity(sentiment),
-                        icon_color=sentiment_leaflet_palette(sentiment),
+                        color=sentiment_leaflet_palette(sentiment),
+                        radius=20),
+        ).add_to(marker_cluster)
+
+    return fmap
+
+
+def add_markers_custom_cluster_color(fmap, data_points):
+
+    def icon_polarity(sentiment):
+        polarity = 'glyphicon glyphicon-hand-right'
+        if sentiment > 0.0:
+            polarity = 'glyphicon glyphicon-thumbs-up'
+        elif sentiment < 0.0:
+            polarity = 'glyphicon glyphicon-thumbs-down'
+        return polarity
+
+    icon_create_function = """
+    function(cluster){
+    children = cluster.getChildCount();
+    return L.divIcon({
+    html:'<style type="text/css">.leaflet-div-icon { background: none!important; border: none!important; text-align: center;}</style><div id="container" background:"none" border:0><svg viewBox="0 0 30 30" ><circle cx="15" cy="15" r="15" fill="#3F69AA" viewBox="0 0 30 30"/><text x="50%" y="50%" text-anchor="middle" stroke="white" stroke-width="1px" dy=".3em">'+ children +'</text></svg></div>',
+    iconSize: new L.Point(30,30)
+    });
+    }
+    """
+
+    marker_cluster = MarkerCluster(icon_create_function=icon_create_function).add_to(fmap)
+
+    for p in data_points:
+        sentiment = get_sentiment(p['text'], p['lang'])
+        f.Marker(
+            location=(p['longitude'], p['latitude']),
+            popup=f.Popup("lang: {}, retweet: {}, favorited: {}".format(p['lang'],
+                                                                        str(p['retweet_count']),
+                                                                        str(p['favorite_count']))),
+            icon=f.Icon(icon=icon_polarity(sentiment),
+                        color=sentiment_leaflet_palette(sentiment),
                         radius=20),
         ).add_to(marker_cluster)
 

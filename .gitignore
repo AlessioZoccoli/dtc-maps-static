@@ -110,3 +110,4 @@ config.py
 test_map_cluster.html
 
 .idea/*
+output/*
