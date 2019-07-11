@@ -27,8 +27,8 @@ Clickando sui cluster:
 Passandoci semplicemente sopra, un poligono delimiterà l'area che il cluster copre.
 <br/><br/>
 Il mongo intero.
-![world](screenshots/world.png)
-Copertura del cluster vicino Roma.
+![world](screenshots/world.png)<br/><br/>
+Copertura del cluster vicino Roma.<br/>
 ![rome](screenshots/spider_rome.png)
 <br/><br/>
 Europa: indicatori di colore verde scuro rappresentano tweet che esprimono sentimenti più positivi rispetto a quelli chiari
