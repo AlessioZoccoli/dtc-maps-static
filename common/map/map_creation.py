@@ -66,13 +66,56 @@ def add_markers_custom_cluster_color(fmap, data_points):
 
     icon_create_function = """
     function(cluster){
-    children = cluster.getChildCount();
+    children_count = cluster.getChildCount();
+    children = cluster.getAllChildMarkers();
+    
+    cluster_sentiment = []
+    
+    children.forEach(function(marker) {
+       color = marker.options.icon.options.markerColor
+       if(typeof color !== 'undefined'){
+           if (color.substring(0,5) === 'light'){
+              cluster_sentiment.push(color.substring(5));
+           } else {
+              cluster_sentiment.push(color)
+           }
+       }
+    });
+
+    function mode(array){
+            if(array.length == 0)
+                return null;
+            var modeMap = {};
+            var maxEl = array[0], maxCount = 1;
+            for(var i = 0; i < array.length; i++){
+                var el = array[i];
+                if(modeMap[el] == null)
+                    modeMap[el] = 1;
+                else
+                    modeMap[el]++;  
+                if(modeMap[el] > maxCount)
+                {
+                    maxEl = el;
+                    maxCount = modeMap[el];
+                }
+            }
+            return maxEl;
+   }
+    
+    let sentiment = mode(cluster_sentiment); // most common color
+    if(sentiment === 'lightred'){            // svg does not accept lightred
+       sentiment = 'indianred'
+    }
+    
+    console.log(sentiment + " " + cluster_sentiment.length)
+    
     return L.divIcon({
-    html:'<style type="text/css">.leaflet-div-icon { background: none!important; border: none!important; text-align: center;}</style><div id="container" background:"none" border:0><svg viewBox="0 0 30 30" ><circle cx="15" cy="15" r="15" fill="#3F69AA" viewBox="0 0 30 30"/><text x="50%" y="50%" text-anchor="middle" stroke="white" stroke-width="1px" dy=".3em">'+ children +'</text></svg></div>',
+    html:'<style type="text/css">.leaflet-div-icon { background: none!important; border: none!important; text-align: center;}</style><div id="container" background:"none" border:0><svg viewBox="0 0 30 30" ><circle cx="15" cy="15" r="15" fill='+sentiment+' viewBox="0 0 30 30"/><text x="50%" y="50%" text-anchor="middle" stroke="white" stroke-width="1px" dy=".3em">'+ children_count +'</text></svg></div>',
     iconSize: new L.Point(30,30)
     });
     }
     """
+    # "#3F69AA"
 
     marker_cluster = MarkerCluster(icon_create_function=icon_create_function).add_to(fmap)
 

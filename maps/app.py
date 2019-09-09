@@ -1,5 +1,5 @@
 from common.persistence.db import Database
-from common.map.map_creation import create_blank_map, add_markers_clustered_pretty_icons, add_markers_custom_cluster_color
+from common.map.map_creation import create_blank_map, add_markers_custom_cluster_color
 import config
 from time import time
 
