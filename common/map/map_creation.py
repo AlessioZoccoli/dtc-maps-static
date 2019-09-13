@@ -11,7 +11,8 @@ def create_blank_map(location=(51.509865, -0.118092), tiles="cartodbpositron"):
     :param tiles: background
     :return: folium map
     """
-    fmap = f.Map(location=location, zoom_start=4, tiles=tiles, prefer_canvas=True)
+    # fmap = f.Map(location=location, zoom_start=4, tiles=tiles, prefer_canvas=True)
+    fmap = f.Map(location=location, zoom_start=4, prefer_canvas=True)
     return fmap
 
 
@@ -54,7 +55,7 @@ def add_markers_clustered_pretty_icons(fmap, data_points):
     return fmap
 
 
-def add_markers_custom_cluster_color(fmap, data_points):
+def add_markers_custom_cluster_color(fmap, data_points, limit=None):
 
     def icon_polarity(sentiment):
         polarity = 'glyphicon glyphicon-hand-right'
@@ -119,16 +120,17 @@ def add_markers_custom_cluster_color(fmap, data_points):
 
     marker_cluster = MarkerCluster(icon_create_function=icon_create_function).add_to(fmap)
 
-    for p in data_points:
-        sentiment = get_sentiment(p['text'], p['lang'])
-        f.Marker(
-            location=(p['longitude'], p['latitude']),
-            popup=f.Popup("lang: {}, retweet: {}, favorited: {}".format(p['lang'],
-                                                                        str(p['retweet_count']),
-                                                                        str(p['favorite_count']))),
-            icon=f.Icon(icon=icon_polarity(sentiment),
-                        color=sentiment_leaflet_palette(sentiment),
-                        radius=20),
-        ).add_to(marker_cluster)
+    for idx, p in enumerate(data_points):
+        if limit and idx < limit or not limit:
+            sentiment = get_sentiment(p['text'], p['lang'])
+            f.Marker(
+                location=(p['longitude'], p['latitude']),
+                popup=f.Popup("lang: {}, retweet: {}, favorited: {}".format(p['lang'],
+                                                                            str(p['retweet_count']),
+                                                                            str(p['favorite_count']))),
+                icon=f.Icon(icon=icon_polarity(sentiment),
+                            color=sentiment_leaflet_palette(sentiment),
+                            radius=20),
+            ).add_to(marker_cluster)
 
     return fmap

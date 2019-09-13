@@ -1,4 +1,6 @@
 folium
-pymongo
+flask_pymongo
 textblob
 translate
+flask
+python-dotenv
