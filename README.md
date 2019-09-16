@@ -8,7 +8,6 @@ Team sottoprogetto: Professor Riccardo Torlone e Alessio Zoccoli.
 ## Mappatura big data + sentiment analysis - app dimostrativa e statica
 Utilizzando alcuni tweet [tweet](https://github.com/RyanMullins/Tutorial-LeafletMongoDB/blob/master/src/primer_tweets.json) si vogliono creare delle mappe geografiche che mettano in relazione flussi di dati provenienti dai social network e informazioni geospaziali.
 Nelle mappe è possibile associare il colore dell'icona (a goccia) al sentimento espresso dal tweet: da rosso scuro per molto negativo a verde scuro per molto positivo, grigio qualora il sentimento sia neutro, il tweet non è soggettivo o il testo non è analizzabile.
-Questo mini progetto è eseguito in locale, non comunica con il web (verrà poi portato tutto su Flask o Django).
 
 Tecnologie:
 - **Python**: 3.7
@@ -16,6 +15,7 @@ Tecnologie:
 - **MongoDB** 4.0 (driver PyMongo 3.8.0): base di dati per i tweet
 - **translate** 3.5.0: traduzione verso l'inglese di tutte le lingue (in futuro verrà aggiunto un modello specifico per l'italiano)
 - **TextBlob** 0.15.2: per la sentiment analysis
+- **Flask** 1.1.1: Web Framework
 
 
 ## Screenshots:

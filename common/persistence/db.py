@@ -8,12 +8,8 @@ class Database(object):
     tweets = db[collection_tweet_simple]
 
     @classmethod
-    def get_n_documents(cls, n=10):
+    def get_n_tweets(cls, n=10):
         return cls.tweets.find().limit(n)
-
-    @classmethod
-    def select(cls, field=('geo.coordinates', 'text', 'lang')):
-        return cls.tweets.find({}, {f: 1 for f in field})
 
     @classmethod
     def get_tweets_by_hashtags(cls, *hashtags):

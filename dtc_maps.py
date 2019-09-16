@@ -1,25 +1,26 @@
-from flask import Flask, render_template
+from flask import Flask
 from common.persistence.db import Database
-from common.map.map_creation import create_blank_map, add_markers_custom_cluster_color
-from time import time
+from common.map.map_creation import create_map
 
 app = Flask(__name__)
 
 
 @app.route("/")
 @app.route("/index")
-def index():
-    points = Database.get_tweets()
-    assert points
+def map():
+    tweets = Database.get_tweets()
+    assert tweets
+    m = create_map(tweets, limit=100)
+    return m
 
-    start_creation = time()
-    fmap = create_blank_map()
-    fmap = add_markers_custom_cluster_color(fmap, points)
-    assert fmap
 
-    end_creation = time()
-    print("{} seconds to create the map\n".format(end_creation - start_creation))
-    return fmap._repr_html_()
+@app.route("/hashtags/<ht>")
+@app.route("/hashtag/<ht>")
+def map_hashtags(ht):
+    tweets = Database.get_tweets_by_hashtags(ht)
+    assert tweets
+    m = create_map(tweets, limit=100)
+    return m
 
 
 if __name__ == '__main__':

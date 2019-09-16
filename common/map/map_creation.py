@@ -1,3 +1,5 @@
+from time import time
+
 import folium as f
 from folium.plugins import MarkerCluster
 from common.sentiment_analysis.sentiment_analysis import get_sentiment
@@ -56,7 +58,13 @@ def add_markers_clustered_pretty_icons(fmap, data_points):
 
 
 def add_markers_custom_cluster_color(fmap, data_points, limit=None):
-
+    """
+    Adds markers associated with data_points on the map (fmap).
+    :param fmap: HTML file representing the blank map.
+    :param data_points: collections of mongodb documents representing the tweets.
+    :param limit: how many data points to consider
+    :return: HTML map
+    """
     def icon_polarity(sentiment):
         polarity = 'glyphicon glyphicon-hand-right'
         if sentiment > 0.0:
@@ -116,7 +124,6 @@ def add_markers_custom_cluster_color(fmap, data_points, limit=None):
     });
     }
     """
-    # "#3F69AA"
 
     marker_cluster = MarkerCluster(icon_create_function=icon_create_function).add_to(fmap)
 
@@ -134,3 +141,20 @@ def add_markers_custom_cluster_color(fmap, data_points, limit=None):
             ).add_to(marker_cluster)
 
     return fmap
+
+
+def create_map(tweets, limit=None):
+    """
+    Given points generates a map in form of a HTML file.
+    :param tweets: Mongo cursor to a collection of geotagged tweets
+    :param limit: how many data points to consider
+    :return: string representation of a HTML file
+    """
+    start_creation = time()
+    fmap = create_blank_map()
+    fmap = add_markers_custom_cluster_color(fmap, tweets, limit)
+    assert fmap
+
+    end_creation = time()
+    print("{} seconds to create the map\n".format(end_creation - start_creation))
+    return fmap._repr_html_()
