@@ -7,7 +7,11 @@ app = Flask(__name__)
 
 @app.route("/")
 @app.route("/index")
-def map():
+def map_all_tweets():
+    """
+    Generate a map containing unfiltered tweets
+    :return: an HTML representation for the map
+    """
     tweets = Database.get_tweets()
     assert tweets
     m = create_map(tweets, limit=100)
@@ -17,9 +21,13 @@ def map():
 @app.route("/hashtags/<ht>")
 @app.route("/hashtag/<ht>")
 def map_hashtags(ht):
+    """
+    Generate a map containing filtered tweets by hashtag
+    :return: an HTML representation for the map
+    """
     tweets = Database.get_tweets_by_hashtags(ht)
     assert tweets
-    m = create_map(tweets, limit=100)
+    m = create_map(tweets)
     return m
 
 

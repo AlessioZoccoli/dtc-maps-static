@@ -103,42 +103,31 @@ class Database(object):
 
         return cursor
 
-"""
-﻿db.getCollection('tweets').aggregate([
-    {
-        '$match': {
-            'geo.coordinates': {'$exists': true, '$ne':null},
-            'lang':'it'
-            }
-    },
-    {
-       '$unwind': '$entities.hashtags'    
-    },
-    {
-        '$project': {
-                'lang': 1,
-                'favorite_count': 1,
-                'retweet_count': 1,
-                'longitude': 1,
-                'latitude': 1,
-                'entities': '$entities.hashtags.text'
+    @classmethod
+    def top_hashtags(cls, n=None):
+        """
+        Top n hashtags
+        :param n: top n
+        :return: cursor
+        """
+        pipeline = [
+            {
+                '$unwind': '$entities.hashtags'
+            },
+            {
+                '$project': {
+                    'hashtag': '$entities.hashtags.text'
                 }
-    },
-    {
-        '$group': {
-            '_id': '$_id',
-            'lang': {'$first': '$lang'},
-            'favorite_count': {'$first': '$favorite_count'},
-            'retweet_count': {'$first': '$retweet_count'},
-            'longitude': {'$first': '$longitude'},
-            'latitude': {'$first': '$latitude'},
-            'hashtags': { '$push': '$entities' }
-         }
-    },
-    {
-        '$match': {
-            'hashtags': {'$in': ['igers', 'UneDisciplinePourTokyo2020']}
-         }
-    }
-    ])
-"""
+            },
+            {
+                '$group': {
+                    '_id': '$hashtag', 'count': {'$sum': 1}
+                }
+            }
+        ]
+
+        if n:
+            pipeline.append({'$limit': n})
+        cursor = cls.tweets.aggregate(pipeline)
+
+        return cursor
