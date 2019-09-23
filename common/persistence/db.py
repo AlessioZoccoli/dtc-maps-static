@@ -12,16 +12,14 @@ class Database(object):
         return cls.tweets.find().limit(n)
 
     @classmethod
-    def get_tweets_by_hashtags(cls, *hashtags):
+    def get_tweets_by_hashtags(cls, *hashtags, logic_and=True):
         """
         returns tweets from mongo filtered by hashtag with their relevant fields
         """
 
-        print("QUERY : ", hashtags)
-
         assert all(isinstance(s, str) for s in hashtags)
-        if isinstance(hashtags, str):
-            hashtags = [hashtags]
+        hashtags = " ".join(hashtags).split(" ")                     # multiple hashtags in the same URI request
+        print("QUERY : ", hashtags)
 
         cursor = cls.tweets.aggregate([
             {
